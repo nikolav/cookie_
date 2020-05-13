@@ -17,16 +17,16 @@ window['cookie_'] =
   var compec;
   var compdc      = decodeURIComponent;
   var corslice    = Function.prototype.call.bind(Array.prototype.slice);
-  var coreach     = Function.prototype.call.bind(Array.prototype.forEach);
   var jsdc        = JSON.parse;
   var jsec        = JSON.stringify;
   var rcookiesep  = /\s*;\s*/g;
 
   compec = _init(function ec (s) {
+    // doesn't encode '_'
     return ec.c("" + s).replace(/[~'()!]/g, ec.s).replace(/[\-*.]/g, ec.f);
   }, {
     'c': encodeURIComponent,
-    'f': (function (a) { return this[a]; }).bind({'*':'%2A','-':'%2D','.':'%2E'}),
+    'f': (function (a) { return this[a]; }).bind({'*':'%2A','-':'%2D','.':'%2E'/*,'_':'%%%'*/}),
     's': window.escape});
 
   cookie = _init(function cookie_ (input, value, opt) {
@@ -42,8 +42,7 @@ window['cookie_'] =
         
         opt   = defs(ispo(opt) ? opt : {}, cdefaults);
         value = cookie_.json ? jsec(value) : (''+value);
-        xtm   = new Date(Date.now() + 
-          86400000 * parseFloat(isnumeric(opt.expires) ? opt.expires : cdefaults.expires));
+        xtm   = new Date(Date.now() + 86400000 * parseFloat(opt.expires));
         
         return (document.cookie = [
           encodekey(input), '=', compec(value),
@@ -120,7 +119,7 @@ window['cookie_'] =
     'rm': function  () {
       return arguments.length && 
         intersect(corslice(arguments, 0), this.ls())
-        .forEach(cbcookierm, {'expires': -1}), this;
+        .forEach(cbcookierm, {'expires': -30}), this;
     }
   });
   
@@ -196,9 +195,6 @@ window['cookie_'] =
   function cbcookiehas (parts) {
     return this.key == this.dc(parts.split('=')[0]);
   }
-  function isnumeric (n) { 
-    return !!(n - parseFloat(n) + 1); 
-  }
   function owneachbase (node, callback, context) {
     
     var name;
@@ -220,6 +216,7 @@ window['cookie_'] =
       this[dk] = dv;
   }
   function each_break (ls, callback, context) {
+
     for (
     var 
       i   = 0, 
@@ -253,5 +250,4 @@ window['cookie_'] =
   }
 
   return cookie;
-
 })();
